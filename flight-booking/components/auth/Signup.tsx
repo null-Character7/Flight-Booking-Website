@@ -1,5 +1,6 @@
 "use client";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -16,29 +17,57 @@ import { ChangeEvent, useState } from "react";
 
 import React from "react";
 import { Button } from "../ui/button";
+import { z } from "zod";
+
+const formSchema = z.object({
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  email: z.string().email({
+    message: "Invalid email address.",
+  }),
+  password: z.string().min(6, {
+    message: "Password must be at least 6 characters.",
+  }),
+  confirmPassword: z.string()
+  
+}).refine(
+  (data) => {
+    return data.password === data.confirmPassword;
+  },
+  {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  }
+);
 
 function Signup() {
-  const form = useForm();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    // defaultValues: {
+    //   username: "",
+    // },
+  });
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+  }
   const [selectedOption, setSelectedOption] = useState("option-one");
   const handleChange = (event: string) => {
     setSelectedOption(event);
-    // Perform action based on the selected option
     if (event === "option-one") {
       console.log("User option selected");
-      // Perform action for user option
     } else if (event === "option-two") {
       console.log("Admin option selected");
-      // Perform action for admin option
     }
   };
 
   return (
     <div>
       <Form {...form}>
-        <form className="w-2/3 space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="loginform"
+            name="username"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Username</FormLabel>
@@ -48,37 +77,64 @@ function Signup() {
                 <FormDescription>
                   *This is your public display name.
                 </FormDescription>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter email" {...field} />
                 </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter password" {...field} />
                 </FormControl>
-                <RadioGroup value={selectedOption} onValueChange={handleChange}>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="option-one" id="option-one" />
-                    <Label htmlFor="option-one">User</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="option-two" id="option-two" />
-                    <Label htmlFor="option-two">Admin</Label>
-                  </div>
-                </RadioGroup>
-                
-                {selectedOption === "option-two" && (
-                    <>
-                    <FormLabel>Admin key</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter secret key" />
-                  </FormControl>
-                    </>
-                    
-                )}
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <RadioGroup value={selectedOption} onValueChange={handleChange}>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="option-one" id="option-one" />
+              <Label htmlFor="option-one">User</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="option-two" id="option-two" />
+              <Label htmlFor="option-two">Admin</Label>
+            </div>
+          </RadioGroup>
+
+          {selectedOption === "option-two" && (
+            <>
+              <FormLabel>Admin key</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter secret key" />
+              </FormControl>
+            </>
+          )}
 
           <Button type="submit">Submit</Button>
         </form>

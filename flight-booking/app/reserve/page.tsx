@@ -40,7 +40,7 @@ function reservepage() {
 
   return (
 <div className="flex justify-center items-center h-screen">
-    <Card className="w-[350px]">
+    <Card className="w-[500px] h-[500px]">
       <CardHeader>
         <CardTitle>Book your flight</CardTitle>
         <CardDescription>confirm tickit in one-click.</CardDescription>
@@ -74,7 +74,7 @@ function reservepage() {
         </PopoverContent>
       </Popover>
       {date && (
-        <div className="text-s text-black-500">Selected Date: {date.toLocaleDateString()}</div>
+        <div className="text-s text-black-500">{date.toLocaleDateString()}</div>
       )}
             </div>
           </div>
