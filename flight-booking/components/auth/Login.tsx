@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
+import { useRouter } from 'next/navigation'
 
 import React from "react";
 import { Button } from "../ui/button";
@@ -27,6 +28,7 @@ const formSchema = z.object({
 })
 
 function Signup() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     // defaultValues: {
@@ -37,6 +39,7 @@ function Signup() {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    router.push("/home")
   }
 
   return (

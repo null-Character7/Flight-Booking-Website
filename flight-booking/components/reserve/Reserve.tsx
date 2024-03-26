@@ -8,7 +8,7 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-  import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
   Select,
@@ -35,7 +35,7 @@ import { CalendarIcon } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
   
 
-function reservepage() {
+function Reserve() {
     const [date, setDate] = React.useState<Date | undefined>(new Date())
 
   return (
@@ -106,4 +106,4 @@ function reservepage() {
   )
 }
 
-export default reservepage
+export default Reserve

@@ -1,6 +1,8 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from 'next/navigation'
+
 import {
   Form,
   FormControl,
@@ -42,6 +44,7 @@ const formSchema = z.object({
 );
 
 function Signup() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     // defaultValues: {
@@ -49,7 +52,10 @@ function Signup() {
     // },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
+    
     console.log(values);
+    router.push("/home")
+
   }
   const [selectedOption, setSelectedOption] = useState("option-one");
   const handleChange = (event: string) => {
