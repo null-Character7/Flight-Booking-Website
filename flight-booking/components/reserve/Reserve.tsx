@@ -89,8 +89,7 @@ function Reserve() {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            LMAO You dont have money to book the flight, cancel it asap
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

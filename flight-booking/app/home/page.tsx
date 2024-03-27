@@ -15,7 +15,7 @@ function homepage() {
       <div className="w-1/6   h-screen overflow-y-auto">
         <Leftbar />
       </div>
-      <div className="w-5/6 border border-white border-l-4 overflow-y-auto">
+      <div className="w-5/6 border-l border-white overflow-y-auto">
       {navState === 'home' && <Mainpage />}
       {navState === 'reserve' && <Reserve />}
       {navState === 'myReservations' && <MyReservations />}
