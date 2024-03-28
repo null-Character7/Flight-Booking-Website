@@ -2,8 +2,15 @@
 import React, { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DollarSign } from "lucide-react";
+import { navStateAtom } from "@/app/recoilContextProvider";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 function Mainpage() {
+    const [navState, setNavState] = useRecoilState(navStateAtom);
+
+    function handleButtonClick(e:number){
+        setNavState('reserve');
+    }
   const [offers, setOffers] = useState([{
     departure: "New York",
     arrival: "Los Angeles",
@@ -43,7 +50,7 @@ function Mainpage() {
             <button
               key={index}
               className="bg-transparent border border-gray-300 rounded p-4 mb-4"
-              // onClick={() => handleButtonClick(offer)}
+              onClick={() => handleButtonClick(1)}
             >
               <h2 className="text-lg font-semibold mb-2">{offer.departure} to {offer.arrival}</h2>
               <h1 className="text-gray-600">Only {offer.price}</h1>

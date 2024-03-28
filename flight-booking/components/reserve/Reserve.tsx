@@ -83,13 +83,13 @@ function Reserve() {
       <CardFooter className="flex justify-between">
       <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button>Book</Button>
+        <Button>Continue</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Are you absolutely sure? </AlertDialogTitle>
           <AlertDialogDescription>
-            LMAO You dont have money to book the flight, cancel it asap
+          You will be redirected to the seat booking page
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

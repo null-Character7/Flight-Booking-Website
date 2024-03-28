@@ -1,0 +1,51 @@
+/* MovieTicketBooking.module.css */
+
+.center {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tickets {
+  width: 550px;
+  height: fit-content;
+  border: 0.4mm solid rgba(0, 0, 0, 0.08);
+  border-radius: 3mm;
+  box-sizing: border-box;
+  padding: 10px;
+  font-family: poppins;
+  max-height: 96vh;
+  overflow: auto;
+  background: white;
+  box-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Define different styles for checked and unchecked checkboxes */
+
+.seat-container {
+  display: grid;
+  grid-gap: 5px; /* Adjust gap as needed */
+}
+
+.seat-row {
+  display: flex;
+}
+
+.seat {
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.checked {
+  background-color: grey; /* Style for checked checkboxes */
+}
+
+/* Style for unchecked checkboxes */
+.seat:not(.checked):hover {
+  background-color: lightgreen; /* Change background color on hover */
+}

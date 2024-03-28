@@ -2,6 +2,8 @@
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from 'next/navigation'
+import { useToast } from "@/components/ui/use-toast"
+
 
 import {
   Form,
@@ -31,7 +33,8 @@ const formSchema = z.object({
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
   }),
-  confirmPassword: z.string()
+  confirmPassword: z.string(),
+  adminKey: z.string().optional(),
   
 }).refine(
   (data) => {
@@ -45,16 +48,47 @@ const formSchema = z.object({
 
 function Signup() {
   const router = useRouter()
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   username: "",
-    // },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    
-    console.log(values);
-    router.push("/home")
+    console.log(values)
+    if(selectedOption=="option-two"){
+      if(values.adminKey != "siu"){
+        console.log("wrong admin key")
+        toast({
+          title: "Wrong admin key",
+        });
+        return;
+      }
+      
+    }
+      try {
+        // const config = {
+        //   headers: {
+        //     "Content-type": "application/json",
+        //   },
+        // };
+  
+        // const { data } = await axios.post(
+        //   "http://localhost:3001/api/users/login",
+        //   { email, password },
+        //   config
+        // );
+  
+        toast({
+          title: "SignUp Successful"
+        });
+        // setUser(data);
+        // localStorage.setItem("userInfo", JSON.stringify(data));
+        router.push("/home")
+      } catch (error) {
+        toast({
+          title: "Error Occured!",
+          // description: error.response.data.message,
+        });
+      }
 
   }
   const [selectedOption, setSelectedOption] = useState("option-one");
@@ -134,12 +168,19 @@ function Signup() {
           </RadioGroup>
 
           {selectedOption === "option-two" && (
-            <>
-              <FormLabel>Admin key</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter secret key" />
-              </FormControl>
-            </>
+            <FormField
+            control={form.control}
+            name="adminKey"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Admin Key</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Admin Key" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           )}
 
           <Button type="submit">Submit</Button>
