@@ -21,14 +21,6 @@ function Leftbar() {
       </button>
       <button
         className={`bg-transparent ${
-          navState === "reserve" ? "bg-blue-500 text-white" : "hover:bg-blue-500 hover:text-white text-blue-500"
-        } font-bold py-2 px-4 rounded mt-4 text-left`}
-        onClick={() => handleButtonClick("reserve")}
-      >
-        Reserve
-      </button>
-      <button
-        className={`bg-transparent ${
           navState === "myReservations" ? "bg-blue-500 text-white" : "hover:bg-blue-500 hover:text-white text-blue-500"
         } font-bold py-2 px-4 rounded mt-4 text-left`}
         onClick={() => handleButtonClick("myReservations")}
