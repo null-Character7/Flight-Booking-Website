@@ -83,7 +83,7 @@ function Reserve() {
           >
             <Label>Enter number of passengers</Label>
             <SelectTrigger className="w-[280px]">
-              <SelectValue placeholder="" />
+              <SelectValue placeholder="Enter number of passengers" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="1">1</SelectItem>

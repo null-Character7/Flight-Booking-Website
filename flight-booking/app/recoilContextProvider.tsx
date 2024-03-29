@@ -4,6 +4,9 @@ import { RecoilRoot, atom } from "recoil";
 interface User {
   phoneNumber: string;
   username: string;
+  _id: string;
+  isAuth: boolean;
+  isAdmin:boolean;
 }
 export const navStateAtom = atom<string>({
     key: 'navStateAtom',
@@ -12,7 +15,10 @@ export const navStateAtom = atom<string>({
 
 const defaultUser: User = {
   phoneNumber: '',
-  username: ''
+  username: '',
+  _id:'',
+  isAuth:true,
+  isAdmin:false
 };
 
 export const userAtom = atom<User>({

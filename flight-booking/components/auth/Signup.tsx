@@ -18,7 +18,8 @@ import { useForm } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChangeEvent, useState } from "react";
-
+import { useSetRecoilState} from 'recoil';
+import { userAtom } from '../../app/recoilContextProvider';
 import React from "react";
 import { Button } from "../ui/button";
 import { z } from "zod";
@@ -54,6 +55,8 @@ const formSchema = z.object({
 );
 
 function Signup() {
+  const setUser = useSetRecoilState(userAtom);
+
   const router = useRouter()
   const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
@@ -87,7 +90,7 @@ function Signup() {
         toast({
           title: "SignUp Successful"
         });
-        // setUser(data);
+        // setUser(data) // phone number username _id isAuth
         // localStorage.setItem("userInfo", JSON.stringify(data));
         router.push("/home")
       } catch (error) {

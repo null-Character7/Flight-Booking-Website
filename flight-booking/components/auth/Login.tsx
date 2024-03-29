@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/components/ui/use-toast"
 import { Label } from "@/components/ui/label";
+import { useSetRecoilState} from 'recoil';
+import { userAtom } from '../../app/recoilContextProvider';
 
 import {
   Form,
@@ -32,7 +34,9 @@ const formSchema = z.object({
   adminKey: z.string().optional(),
 });
 
-function Signup() {
+function Login() {
+  const setUser = useSetRecoilState(userAtom);
+
   const router = useRouter();
   const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
@@ -151,4 +155,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;
