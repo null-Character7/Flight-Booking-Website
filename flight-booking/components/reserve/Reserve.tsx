@@ -48,51 +48,34 @@ function Reserve() {
   const [count, setCount] = useState(0);
   const [price, setPrice] = useState(0);
 
+  const renderPassengerInputs = () => {
+    const passengerInputs = [];
+    for (let i = 1; i <= count; i++) {
+      passengerInputs.push(
+        <div key={i} className="grid w-full items-center gap-4 mb-4">
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor={`name-${i}`}>Name (Passenger {i})</Label>
+            <Input id={`name-${i}`} placeholder="Name as per your aadhar card" />
+          </div>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor={`phone-${i}`}>Contact No (Passenger {i})</Label>
+            <Input id={`phone-${i}`} placeholder="Contact number" />
+          </div>
+        </div>
+      );
+    }
+    return passengerInputs;
+  };
+
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Card className="w-[500px] h-[550px]">
+    <div className="flex justify-center">
+      <Card className="w-[500px]">
         <CardHeader>
           <CardTitle>Book your flight</CardTitle>
           <CardDescription>Confirm ticket in one-click.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Name as per your aadhar card" />
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="phone">Contact No</Label>
-                <Input id="Phone" placeholder="Contact number" />
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="date">Date of Journey</Label>
-                <Popover>
-                  <PopoverTrigger>
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50 cursor-pointer" />
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={(selectedDate) => {
-                        setDate(selectedDate);
-                      }}
-                      className="rounded-md border"
-                    />
-                  </PopoverContent>
-                </Popover>
-                {date && (
-                  <div className="text-s text-black-500">
-                    {date.toLocaleDateString()}
-                  </div>
-                )}
-              </div>
-            </div>
-          </form>
-          <br />
-          <Select
+        <Select
             onValueChange={(newValue: any) => {
               setCount(newValue);
               setPrice(newValue * 10);
@@ -112,6 +95,11 @@ function Reserve() {
             </SelectContent>
           </Select>
           <br />
+          <form>
+          {renderPassengerInputs()}
+          </form>
+          <br />
+          
           <div className={style.costbox}>Total Cost: ${price}</div>
         </CardContent>
         <CardFooter className="flex justify-between items-center">
