@@ -4,14 +4,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DollarSign } from "lucide-react";
 import { navStateAtom } from "@/app/recoilContextProvider";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRouter } from 'next/navigation';
+
 
 function Mainpage() {
+  const router = useRouter();
     const [navState, setNavState] = useRecoilState(navStateAtom);
 
-    function handleButtonClick(e:number){
-        setNavState('reserve');
+    function handleButtonClick(e:string){
+      const url = `/home/${e}`;
+        router.push(url)
     }
   const [offers, setOffers] = useState([{
+    _id:"22222",
     departure: "New York",
     arrival: "Los Angeles",
     price: 250,
@@ -20,6 +25,7 @@ function Mainpage() {
     ss: "00",
   },
   {
+    _id:"22223",
     departure: "London",
     arrival: "Paris",
     price: 180,
@@ -28,6 +34,7 @@ function Mainpage() {
     ss: "00",
   },
   {
+    _id:"22224",
     departure: "Tokyo",
     arrival: "Sydney",
     price: 500,
@@ -50,7 +57,7 @@ function Mainpage() {
             <button
               key={index}
               className="bg-transparent border border-gray-300 rounded p-4 mb-4"
-              onClick={() => handleButtonClick(1)}
+              onClick={() => handleButtonClick(offer._id)}
             >
               <h2 className="text-lg font-semibold mb-2">{offer.departure} to {offer.arrival}</h2>
               <h1 className="text-gray-600">Only {offer.price}</h1>
@@ -64,5 +71,7 @@ function Mainpage() {
     </div>
   );
 }
+
+
 
 export default Mainpage;

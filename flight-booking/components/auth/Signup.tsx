@@ -35,6 +35,13 @@ const formSchema = z.object({
   }),
   confirmPassword: z.string(),
   adminKey: z.string().optional(),
+  phoneNumber: z.string().refine(value => {
+    // Regular expression for a valid phone number format (example)
+    const phoneRegex = /^\d{10}$/;
+    return phoneRegex.test(value);
+  }, {
+    message: "Invalid phone number format.",
+  })
   
 }).refine(
   (data) => {
@@ -156,6 +163,19 @@ function Signup() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="phoneNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone Number</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Phone number" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          
           <RadioGroup value={selectedOption} onValueChange={handleChange}>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="option-one" id="option-one" />
