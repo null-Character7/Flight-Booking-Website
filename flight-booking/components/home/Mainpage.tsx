@@ -5,44 +5,47 @@ import { DollarSign } from "lucide-react";
 import { navStateAtom } from "@/app/recoilContextProvider";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useRouter } from 'next/navigation';
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast"
+
 
 
 function Mainpage() {
   const router = useRouter();
     const [navState, setNavState] = useRecoilState(navStateAtom);
-
+    const { toast } = useToast()
     function handleButtonClick(e:string){
       const url = `/home/${e}`;
         router.push(url)
     }
-  const [offers, setOffers] = useState([{
-    _id:"22222",
-    departure: "New York",
-    arrival: "Los Angeles",
-    price: 250,
-    hh: "12",
-    mm: "00",
-    ss: "00",
-  },
-  {
-    _id:"22223",
-    departure: "London",
-    arrival: "Paris",
-    price: 180,
-    hh: "15",
-    mm: "30",
-    ss: "00",
-  },
-  {
-    _id:"22224",
-    departure: "Tokyo",
-    arrival: "Sydney",
-    price: 500,
-    hh: "10",
-    mm: "45",
-    ss: "00",
-  },]);
-
+    const [offers, setOffers] = useState<{ 
+      _id: string;
+      departure: string;
+      arrival: string;
+      price: number
+  }[]>([]);
+    const fetchOffers = async () => {
+      try {
+        console.log("fetch offers");
+        // const config = {
+        //   headers: {
+        //     Authorization: `Bearer ${user.token}`,
+        //   },
+        // };
+  
+        const { data } = await axios.get(
+          `http://localhost:8081/allOffers`
+        );
+        console.log("data ", data);
+        setOffers(data);
+        
+      } catch (error) {
+        toast({
+          title: "Error Occured!"
+        });
+      }
+    };
+    
   return (
     <div>
       <div className="inset-0 border border-gray-300 ">
@@ -61,7 +64,6 @@ function Mainpage() {
             >
               <h2 className="text-lg font-semibold mb-2">{offer.departure} to {offer.arrival}</h2>
               <h1 className="text-gray-600">Only {offer.price}</h1>
-              <p className="text-gray-600">valid till {offer.hh}:{offer.mm}:{offer.ss} only</p>
             </button>
           ))}
         </div>
@@ -70,6 +72,13 @@ function Mainpage() {
       
     </div>
   );
+}
+
+interface Offer {
+  _id: string;
+  departure: string;
+  arrival: string;
+  price: number;
 }
 
 

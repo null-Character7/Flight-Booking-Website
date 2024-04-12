@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from 'next/navigation'
 import { useToast } from "@/components/ui/use-toast"
+import axios from 'axios';
 
 
 import {
@@ -22,7 +23,7 @@ import { useSetRecoilState} from 'recoil';
 import { userAtom } from '../../app/recoilContextProvider';
 import React from "react";
 import { Button } from "../ui/button";
-import { z } from "zod";
+import { boolean, z } from "zod";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -62,7 +63,7 @@ function Signup() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
     if(selectedOption=="option-two"){
       if(values.adminKey != "siu"){
@@ -80,17 +81,25 @@ function Signup() {
         //     "Content-type": "application/json",
         //   },
         // };
-  
-        // const { data } = await axios.post(
-        //   "http://localhost:3001/api/users/login",
-        //   { email, password },
-        //   config
-        // );
+        const isAdmin = (selectedOption=="option-two")
+        if(isAdmin)
+          console.log("admin hai")
+        const { data } = await axios.post(
+          "http://localhost:8081/user/signup",
+          {
+            email: values.email,
+            password: values.password,
+            username: values.username,
+            isAdmin: isAdmin,
+            phoneNumber: values.phoneNumber 
+          }
+        );
   
         toast({
           title: "SignUp Successful"
         });
-        // setUser(data) // phone number username _id isAuth
+        console.log("data.isAdmin = ",data.isAdmin);
+        setUser(data) // phone number username _id isAuth
         // localStorage.setItem("userInfo", JSON.stringify(data));
         router.push("/home")
       } catch (error) {

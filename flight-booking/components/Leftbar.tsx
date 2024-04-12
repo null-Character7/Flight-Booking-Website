@@ -8,6 +8,7 @@ function Leftbar() {
   const router = useRouter();
   const [navState, setNavState] = useRecoilState(navStateAtom);
   const user = useRecoilValue(userAtom);
+  console.log("user in leftbar=",user.isAdmin);
   const handleButtonClick = (navValue: string) => {
     setNavState(navValue);
   };
@@ -35,7 +36,7 @@ function Leftbar() {
       >
         My Reservations
       </button>}
-      {user.isAdmin &&<button
+      {user.isAdmin && <button
         className={`bg-transparent ${
           navState === "addFlights" ? "bg-blue-500 text-white" : "hover:bg-blue-500 hover:text-white text-blue-500"
         } font-bold py-2 px-4 rounded mt-4 text-left`}

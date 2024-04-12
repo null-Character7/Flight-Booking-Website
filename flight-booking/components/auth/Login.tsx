@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Label } from "@/components/ui/label";
 import { useSetRecoilState} from 'recoil';
 import { userAtom } from '../../app/recoilContextProvider';
+import axios from 'axios';
 
 import {
   Form,
@@ -42,7 +43,7 @@ function Login() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     if(selectedOption=="option-two"){
       if(values.adminKey != 'siu'){
@@ -60,18 +61,24 @@ function Login() {
       //     "Content-type": "application/json",
       //   },
       // };
-
-      // const { data } = await axios.post(
-      //   "http://localhost:3001/api/users/login",
-      //   { email, password },
-      //   config
-      // );
+      const isAdmin = (selectedOption=="option-two")
+        if(isAdmin)
+          console.log("admin hai")
+      const { data } = await axios.post(
+        "http://localhost:8081/user/login",
+        {
+          email: values.email,
+          password: values.password,
+          isAdmin: isAdmin,
+        }
+      );
 
       toast({
         title: "Login Successful",
       });
-      // setUser(data);
-      // localStorage.setItem("userInfo", JSON.stringify(data));
+      console.log("data in login ",data);
+      setUser(data);
+      localStorage.setItem("userInfo", JSON.stringify(data));
       router.push("/home");
     } catch (error) {
       toast({

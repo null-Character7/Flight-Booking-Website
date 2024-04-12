@@ -33,6 +33,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useToast } from "@/components/ui/use-toast"
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -42,11 +43,38 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import axios from "axios";
 
-function Reserve() {
+interface ReserveProps {
+  reserveId: string;
+  // Other props if any
+}
+
+const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [count, setCount] = useState(0);
   const [price, setPrice] = useState(0);
+  const { toast } = useToast()
+  const fetchOfferDetails = async () => {
+    try {
+      console.log("fetch offer details");
+      // const config = {
+      //   headers: {
+      //     Authorization: `Bearer ${user.token}`,
+      //   },
+      // };
+
+      const { data } = await axios.get(
+        `http://localhost:8081/offer?offerId=${reserveId}`
+      );
+      console.log("data ", data);
+      
+    } catch (error) {
+      toast({
+        title: "Error Occured!"
+      });
+    }
+  };
 
   const renderPassengerInputs = () => {
     const passengerInputs = [];

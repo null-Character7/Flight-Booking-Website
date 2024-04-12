@@ -1,13 +1,12 @@
-import React from 'react'
+import React from 'react';
 import Reserve from '../../../components/reserve/Reserve';
 
-function page({ params }: { params: { reserveId: string } }) {
+function Page({ params }: { params: { reserveId: string } }) {
   console.log(params.reserveId);
-  // get the info of tht offer from get call
+  
   return (
-    // pass the offer as child
-    <Reserve ></Reserve>
-  )
+    <Reserve reserveId={params.reserveId} />
+  );
 }
 
-export default page
+export default Page;
