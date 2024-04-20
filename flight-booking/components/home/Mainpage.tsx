@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DollarSign } from "lucide-react";
 import { navStateAtom } from "@/app/recoilContextProvider";
@@ -34,7 +34,7 @@ function Mainpage() {
         // };
   
         const { data } = await axios.get(
-          `http://localhost:8081/allOffers`
+          `http://localhost:8081/user/alloffer`
         );
         console.log("data ", data);
         setOffers(data);
@@ -45,6 +45,10 @@ function Mainpage() {
         });
       }
     };
+    useEffect(() => {
+      fetchOffers();
+      console.log("offers currently : ",offers)
+    }, []);
     
   return (
     <div>

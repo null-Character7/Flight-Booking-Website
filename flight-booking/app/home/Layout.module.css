@@ -4,7 +4,7 @@
     background-image: url('../../public/flightbg.avif'); /* Specify the path to your background image */
     background-size: cover; /* Cover the entire container with the background image */
     background-position: center; /* Center the background image */
-    background-attachment: fixed; /* Fix the background image position */
+      background-attachment: fixed; /* Fix the background image position */
 
     min-height: 100vh; /* Ensure the container covers the entire viewport height */
   }

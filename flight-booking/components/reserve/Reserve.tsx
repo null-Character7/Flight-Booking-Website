@@ -75,6 +75,7 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
       });
     }
   };
+  
 
   const renderPassengerInputs = () => {
     const passengerInputs = [];
