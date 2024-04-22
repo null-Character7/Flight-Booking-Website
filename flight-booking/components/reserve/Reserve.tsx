@@ -48,6 +48,8 @@ import {
 } from "@/components/ui/popover";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useRecoilValue } from 'recoil';
+import { navStateAtom, userAtom } from "@/app/recoilContextProvider";
 
 
 interface ReserveProps {
@@ -60,6 +62,8 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [count, setCount] = useState(0);
   const [price, setPrice] = useState(0);
+  const user = useRecoilValue(userAtom);
+
 
   const [offer, setOffer] = useState<
     {
@@ -73,7 +77,7 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
 
   const fetchOffer = async () => {
     try {
-      console.log("fetching cur offer");
+      console.log("booking for ",user);
       // const config = {
       //   headers: {
       //     Authorization: `Bearer ${user.token}`,
@@ -103,6 +107,8 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
   const handleBooking = async () => {
     try {
       console.log("booking");
+      const formattedDate = date?.toISOString().split('T')[0]; // Get ISO string and split at 'T' to get date part
+
       // const config = {
       //   headers: {
       //     Authorization: `Bearer ${user.token}`,
@@ -112,6 +118,8 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
       const { data } = await axios.post(
         "http://localhost:8081/user/book",
         {
+          phoneNumber: user.phoneNumber,
+          date:formattedDate,
           offer:offer,
           passenger:passengerData
         }
