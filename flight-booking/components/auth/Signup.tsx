@@ -91,16 +91,16 @@ function Signup() {
             password: values.password,
             username: values.username,
             isAdmin: isAdmin,
-            phoneNumber: values.phoneNumber 
+            phone: values.phoneNumber 
           }
         );
   
         toast({
           title: "SignUp Successful"
         });
-        console.log("data.isAdmin = ",data.isAdmin);
+        console.log("data returned = ",data);
         setUser(data) // phone number username _id isAuth
-        // localStorage.setItem("userInfo", JSON.stringify(data));
+        localStorage.setItem("userInfo", JSON.stringify(data));
         router.push("/home")
       } catch (error) {
         toast({

@@ -44,7 +44,6 @@ function AddFlights() {
       const { data } = await axios.post(
         "http://localhost:8081/offer/addoffer",
         {
-          offerId: "3",
           cost: cost,
           origin: arrival,
           destination: destination,

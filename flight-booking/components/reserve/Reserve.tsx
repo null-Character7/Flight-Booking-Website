@@ -48,7 +48,7 @@ import {
 } from "@/components/ui/popover";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { navStateAtom, userAtom } from "@/app/recoilContextProvider";
 
 
@@ -62,7 +62,14 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [count, setCount] = useState(0);
   const [price, setPrice] = useState(0);
-  const user = useRecoilValue(userAtom);
+  const [user, setUser] = useRecoilState(userAtom);
+
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("userInfo"));
+    if (savedUser) {
+      setUser(savedUser);
+    }
+  }, []);
 
 
   const [offer, setOffer] = useState<
@@ -106,9 +113,9 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
 
   const handleBooking = async () => {
     try {
-      console.log("booking");
+      console.log("booking user",user);
       const formattedDate = date?.toISOString().split('T')[0]; // Get ISO string and split at 'T' to get date part
-
+      console.log(formattedDate)
       // const config = {
       //   headers: {
       //     Authorization: `Bearer ${user.token}`,
