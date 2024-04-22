@@ -36,14 +36,19 @@ import {
 import { useToast } from "@/components/ui/use-toast"
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, DollarSign } from "lucide-react";
+import { format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+ 
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+
 
 interface ReserveProps {
   reserveId: string;
@@ -51,24 +56,69 @@ interface ReserveProps {
 }
 
 const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
+  const router = useRouter();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [count, setCount] = useState(0);
   const [price, setPrice] = useState(0);
+
+  const [offer, setOffer] = useState<
+    {
+      offerId: string;
+      origin: string;
+      destination: string;
+      cost: number;
+    }
+  >();
   const { toast } = useToast()
-  const fetchOfferDetails = async () => {
+
+  const fetchOffer = async () => {
     try {
-      console.log("fetch offer details");
+      console.log("fetching cur offer");
+      // const config = {
+      //   headers: {
+      //     Authorization: `Bearer ${user.token}`,
+      //   },
+      // };
+      console.log("reserveId ",reserveId);
+      const { data } = await axios.get(
+        `http://localhost:8081/offer/${reserveId}`
+
+      );
+      console.log("data in reserve id", data);
+      setOffer(data);
+
+    } catch (error) {
+      toast({
+        title: "Error Occured!"
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchOffer();
+    // console.log("offers currently : ",offers)
+  }, []);
+
+
+  const handleBooking = async () => {
+    try {
+      console.log("booking");
       // const config = {
       //   headers: {
       //     Authorization: `Bearer ${user.token}`,
       //   },
       // };
 
-      const { data } = await axios.get(
-        `http://localhost:8081/offer?offerId=${reserveId}`
+      const { data } = await axios.post(
+        "http://localhost:8081/user/book",
+        {
+          offer:offer,
+          passenger:passengerData
+        }
       );
       console.log("data ", data);
-      
+      console.log("passanger data = ",passengerData)
+      router.push("/home");
     } catch (error) {
       toast({
         title: "Error Occured!"
@@ -77,28 +127,44 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
   };
   
 
+  const [passengerData, setPassengerData] = useState<Passenger[]>([]);
+
   const renderPassengerInputs = () => {
-    const passengerInputs = [];
-    for (let i = 1; i <= count; i++) {
-      passengerInputs.push(
-        <div key={i} className="grid w-full items-center gap-4 mb-4">
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor={`name-${i}`}>Name (Passenger {i})</Label>
-            <Input id={`name-${i}`} placeholder="Name as per your aadhar card" />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor={`phone-${i}`}>Contact No (Passenger {i})</Label>
-            <Input id={`phone-${i}`} placeholder="Contact number" />
-          </div>
+    return Array.from({ length: count }, (_, i) => (
+      <div key={i} className="grid w-full items-center gap-4 mb-4">
+        <div className="flex flex-col space-y-1.5">
+          <Label htmlFor={`name-${i}`}>Name (Passenger {i + 1})</Label>
+          <Input 
+            id={`name-${i}`}
+            placeholder="Name as per your aadhar card"
+            value={passengerData[i]?.name || ''}
+            onChange={(e) => handleInputChange(i, 'name', e.target.value)}
+          />
         </div>
-      );
-    }
-    return passengerInputs;
+        <div className="flex flex-col space-y-1.5">
+          <Label htmlFor={`phone-${i}`}>Contact No (Passenger {i + 1})</Label>
+          <Input 
+            id={`phone-${i}`} 
+            placeholder="Contact number"
+            value={passengerData[i]?.phone || ''}
+            onChange={(e) => handleInputChange(i, 'phone', e.target.value)}
+          />
+        </div>
+      </div>
+    ));
+  };
+
+  const handleInputChange = (index: number, field: keyof Passenger, value: string) => {
+    setPassengerData(prevData => {
+      const newData = [...prevData];
+      newData[index] = { ...newData[index], [field]: value };
+      return newData;
+    });
   };
 
   return (
     <div className="flex justify-center">
-      <Card className="w-[500px]">
+      <Card className="w-[500px] bg-transparent border-none">
         <CardHeader>
           <CardTitle>Book your flight</CardTitle>
           <CardDescription>Confirm ticket in one-click.</CardDescription>
@@ -107,7 +173,8 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
         <Select
             onValueChange={(newValue: any) => {
               setCount(newValue);
-              setPrice(newValue * 10);
+              // console.log(offer)
+              setPrice(newValue*offer.cost)
             }}
           >
             <Label>Enter number of passengers</Label>
@@ -128,6 +195,30 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
           {renderPassengerInputs()}
           </form>
           <br />
+          <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "w-[280px] justify-start text-left font-normal",
+            !date && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {date ? format(date, "PPP") : <span>Journey date</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+    <br></br>
+    <br></br>
           
           <div className={style.costbox}>Total Cost: ${price}</div>
         </CardContent>
@@ -146,14 +237,22 @@ const Reserve: React.FC<ReserveProps> = ({ reserveId }) => {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
+                <AlertDialogAction onClick={handleBooking}>Continue</AlertDialogAction>
+                {/* // */}
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </CardFooter>
+        
       </Card>
+      
     </div>
   );
+}
+
+interface Passenger {
+  name: string;
+  phone: string;
 }
 
 export default Reserve;

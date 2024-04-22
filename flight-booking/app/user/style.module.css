@@ -1,6 +1,5 @@
-
+/* 
 .ocean { 
-  /* height: 5%; */
   width:100%;
   position:absolute;
   bottom:0;
@@ -43,4 +42,4 @@
   50% {
     transform: translate3d(0,5px,0);
   }
-} 
+}  */
