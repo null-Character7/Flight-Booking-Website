@@ -26,8 +26,12 @@ import { z } from "zod";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 const formSchema = z.object({
-  email: z.string().email({
-    message: "Invalid email address.",
+  phoneNumber: z.string().refine(value => {
+    // Regular expression for a valid phone number format (example)
+    const phoneRegex = /^\d{10}$/;
+    return phoneRegex.test(value);
+  }, {
+    message: "Invalid phone number format.",
   }),
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
@@ -67,7 +71,7 @@ function Login() {
       const { data } = await axios.post(
         "http://localhost:8081/user/login",
         {
-          email: values.email,
+          phone: values.phoneNumber,
           password: values.password,
           isAdmin: isAdmin,
         }
@@ -104,12 +108,12 @@ function Login() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="email"
+            name="phoneNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="Email" {...field} />
+                  <Input placeholder="Phone Number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
